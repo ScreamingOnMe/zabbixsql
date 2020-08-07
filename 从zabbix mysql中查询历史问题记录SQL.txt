@@ -1,0 +1,31 @@
+select distinct aaa.eventid ,#事件id
+aaa.eventname , #事件名称
+aaa.activetime , #发生时间
+aaa.cleartime ,  #清除时间
+aaa.num , # 清除时间-发生时间 单位为秒
+aaa.hostname , # 主机名称
+aaa.ipad,aaa.hostgroupname #主机组名称
+from (
+select e.eventid as eventid, 
+e.objectid,
+e.name as eventname,
+h.name as hostname,
+h.host as ipad,
+hgp.name as hostgroupname,
+FROM_UNIXTIME(e.clock,'%Y-%m-%d %H:%i:%s') as activetime,
+(select FROM_UNIXTIME(e.clock,'%Y-%m-%d %H:%i:%s') from events e where e.eventid = er.r_eventid) as cleartime ,
+((select e.clock from events e where e.eventid = er.r_eventid) - e.clock )  as num # 单位是秒
+from events e ,event_recovery er ,triggers tr , functions f , hosts h , items i ,hstgrp hgp,hosts_groups hg
+where  e.object = 0 and source = 0
+and e.eventid = er.eventid
+and e.objectid = tr.triggerid
+and f.triggerid = tr.triggerid
+and f.itemid = i.itemid
+and h.hostid = i.hostid 
+and h.hostid = hg.hostid
+and hg.groupid = hgp.groupid
+and i.status = 0
+and h.status <>3 
+and ((select e.clock from events e where e.eventid = er.r_eventid) - e.clock ) > 86400 # 清除时间-发生时间大于2天
+and e.clock >1590940800 and e.clock <1593532799 # unix时间转换，查6月1日-6月30日
+order by e.clock) aaa
