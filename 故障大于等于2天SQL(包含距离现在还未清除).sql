@@ -29,9 +29,9 @@ and hg.groupid = hgp.groupid
 and tr.status = 0 # 选择触发器为启用状态产生的告警
 and i.status = 0  # 选择主机为启用状态产生的告警
 and h.status <>3  # 去掉zabbix模板类，模板和主机共存一张表
-and h.host<>'Zabbix server' # 去掉zabbix server本身告警
+#and h.host<>'Zabbix server' # 去掉zabbix server本身告警
 and ((select e.clock from events e where e.eventid = er.r_eventid) - e.clock ) > 172800 # 清除时间-发生时间大于2天
-and e.clock >1590940800 and e.clock <1593532799 # unix时间转换，查6月1日-6月30日
+#and e.clock >1590940800 and e.clock <1593532799 # unix时间转换，查6月1日-6月30日
 order by e.clock) aaa
 
 union 
@@ -67,7 +67,7 @@ and p.r_eventid is null
 and tr.status = 0 # 选择触发器为启用状态产生的告警
 and i.status = 0  # 选择主机为启用状态产生的告警
 and h.status <>3  # 去掉zabbix模板类，模板和主机共存一张表
-and h.host<>'Zabbix server'  # 去掉zabbix server本身告警
+#and h.host<>'Zabbix server'  # 去掉zabbix server本身告警
 and (UNIX_TIMESTAMP(sysdate()) - p.clock)  > 172800 # 清除时间-发生时间大于2天
-and p.clock >1590940800 and p.clock <1593532799 # unix时间转换，查6月1日-6月30日
+#and p.clock >1590940800 and p.clock <1593532799 # unix时间转换，查6月1日-6月30日
 order by p.clock) bbb
