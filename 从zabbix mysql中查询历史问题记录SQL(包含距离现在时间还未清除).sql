@@ -1,12 +1,12 @@
 # 指定时间段内，已经处理完毕的
 select distinct aaa.eventid ,#事件id
-aaa.eventname as 故障标题 , #事件名称
-aaa.activetime as 故障发生时间, #发生时间
-aaa.cleartime as 故障清除时间,  #清除时间
-format(aaa.num/60/60/24,2) as 故障清除历时（天）,
+aaa.eventname as 故障标题 ,
+aaa.hostgroupname as 业务系统名称,
 aaa.hostname as 设备名称, # 主机名称
 aaa.ipad as 设备IP地址,# IP地址
-aaa.hostgroupname as 业务系统名称#主机组名称
+aaa.activetime as 故障发生时间, #发生时间
+aaa.cleartime as 故障清除时间,  #清除时间
+format(aaa.num/60/60/24,2) as 故障清除历时（天）
 from (
 select e.eventid as eventid, 
 e.objectid,
@@ -38,13 +38,13 @@ union
 
 #指定时间段内，距离当前时间还没处理完成的
 select distinct bbb.eventid,
-bbb.eventname as 故障标题,
-bbb.activetime as 故障发生时间 ,
-bbb.cleartime as 故障清除时间,
-format(bbb.num/60/60/24,2) as 故障清除历时（天） ,
-bbb.hostname as 设备名称,
-bbb.ipad as 设备IP地址,
-bbb.hostgroupname as 业务系统名称
+bbb.eventname as 故障标题 ,
+bbb.hostgroupname as 业务系统名称,
+bbb.hostname as 设备名称, # 主机名称
+bbb.ipad as 设备IP地址,# IP地址
+bbb.activetime as 故障发生时间, #发生时间
+bbb.cleartime as 故障清除时间,  #清除时间
+format(bbb.num/60/60/24,2) as 故障清除历时（天）
 from (
 select p.eventid,
 p.objectid, 
